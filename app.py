@@ -99,7 +99,11 @@ class Commodity:
         
 @app.route('/')
 def index():
-    return render_template('index.html')
+    context = {
+        "top5": TopFiveWinners(),
+        "bottom5": TopFiveLosers()
+    }
+    return render_template('index.html',context)
 
 def TopFiveWinners():
     current_month = datetime.now().month
@@ -151,7 +155,7 @@ def TopFiveLosers():
         name = commodity_list[i].getCropName().split('/')[1]
         to_send.append([name, round((current_month_prediction[i][0]*base[name])/100,2), round(perc[0],2)])
     print(to_send)
-
+"""
 def SixMonthsPrediction():
     current_month = datetime.now().month
     current_year = datetime.now().year
@@ -180,6 +184,29 @@ def SixMonthsPrediction():
         name = commodity_list[i].getCropName().split('/')[1]
         to_send.append([name, round((current_month_prediction[i][0] * base[name]) / 100, 2), round(perc[0], 2)])
     print(to_send)
+"""
+
+def TwelveMonthsForecast(name):
+    current_month = datetime.now().month
+    current_year = datetime.now().year
+    current_rainfall = annual_rainfall[current_month - 1]
+    name = name.lower()
+    commodity=""
+    for i in commodity_list:
+        if name == str(i):
+            commodity = i
+            break
+    month_with_year = []
+    for i in range(1,13):
+        if current_month+i <=12:
+            month_with_year.append((current_month+i,current_year))
+        else:
+            month_with_year.append((current_month+i-12,current_year+1))
+
+    for m, y in month_with_year:
+
+
+
 
 
 if __name__ == "__main__":
