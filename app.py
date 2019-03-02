@@ -257,8 +257,10 @@ def TwelveMonthPrevious(name):
     current_year = datetime.now().year
     current_rainfall = annual_rainfall[current_month-1]
     commodity = ""
+    wpis = []
+    crop_price = []
     for i in commodity_list:
-        if name = str(i):
+        if name == str(i):
             commodity = i
             break
     month_with_year = []
@@ -268,19 +270,16 @@ def TwelveMonthPrevious(name):
         else:
             month_with_year.append((current_month-i+12, current_year-1,annual_rainfall[current_month-i+11]))
 
-
-
-'''    for m, y, r in month_with_year:
+    for m, y, r in month_with_year:
         current_predict = i.getPredictedValue([float(m), y,r])
-        if current_predict > max_value:
-            max_value = current_predict
-            max_index = month_with_year.index(m,y,r)
-        if current_predict < min_value:
-            min_value = current_predict
-            min_index = month_with_year(m,y,r)
         wpis.append(current_predict)
-        
-   '''
+
+    for i in range(0,len(wpis)):
+        m,y,r = month_with_year[i]
+        crop_price.append([m,y,wpis[i]*base[name.capitalize()]/100])
+
+    return crop_price
+
 
 
 
