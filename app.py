@@ -152,6 +152,34 @@ def TopFiveLosers():
         to_send.append([name, round((current_month_prediction[i][0]*base[name])/100,2), round(perc[0],2)])
     print(to_send)
 
+def SixMonthsPrediction():
+    current_month = datetime.now().month
+    current_year = datetime.now().year
+    current_rainfall = annual_rainfall[current_month - 1]
+    months=[]
+    rainfalls=[]
+    for i in range(0,6):
+        months.append(current_month+i)
+        rainfalls.append(current_month+i)
+    six_month_prediction = []
+    prev_month_prediction = []
+    change = []
+
+    for i in commodity_list:
+        current_predict = i.getPredictedValue([float(current_month), current_year, current_rainfall])
+        current_month_prediction.append(current_predict)
+        prev_predict = i.getPredictedValue([float(prev_month), current_year, prev_rainfall])
+        prev_month_prediction.append(prev_predict)
+        change.append((((current_predict - prev_predict) * 100 / prev_predict), commodity_list.index(i)))
+    sorted_change = change
+    sorted_change.sort(reverse=True)
+    # print(sorted_change)
+    to_send = []
+    for j in range(0, 5):
+        perc, i = sorted_change[j]
+        name = commodity_list[i].getCropName().split('/')[1]
+        to_send.append([name, round((current_month_prediction[i][0] * base[name]) / 100, 2), round(perc[0], 2)])
+    print(to_send)
 
 
 if __name__ == "__main__":
