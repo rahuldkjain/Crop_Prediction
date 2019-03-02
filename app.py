@@ -213,7 +213,7 @@ def TwelveMonthPrevious(name):
     name = name.lower()
     current_month = datetime.now().month
     current_year = datetime.now().year
-    current_rrainfall = annual_rainfall[current_month-1]
+    current_rainfall = annual_rainfall[current_month-1]
     commodity = ""
     for i in commodity_list:
         if name = str(i):
@@ -221,13 +221,26 @@ def TwelveMonthPrevious(name):
             break
     month_with_year = []
     for i in range(1,13):
-        if current_month + i <=12:
-            month_with_year.append(current_month+i, current_year))
+        if current_month - i >=1:
+            month_with_year.append((current_month-i, current_year,annual_rainfall[current_month-i-1]))
         else:
-            month_with_year.append(current_month+i-12, current_year)
+            month_with_year.append((current_month-i+12, current_year-1,annual_rainfall[current_month-i+11]))
 
-    for m, y in month_with_year:
+
+
+'''    for m, y, r in month_with_year:
+        current_predict = i.getPredictedValue([float(m), y,r])
+        if current_predict > max_value:
+            max_value = current_predict
+            max_index = month_with_year.index(m,y,r)
+        if current_predict < min_value:
+            min_value = current_predict
+            min_index = month_with_year(m,y,r)
+        wpis.append(current_predict)
         
+   '''
+
+
 
 if __name__ == "__main__":
     arhar = Commodity(commodity_dict["arhar"])
