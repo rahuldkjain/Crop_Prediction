@@ -103,19 +103,24 @@ def index():
         "top5": TopFiveWinners(),
         "bottom5": TopFiveLosers()
     }
-    return render_template('index.html',context)
+    return render_template('index.html',context = context)
 
 @app.route('/commodity/<name>')
 def crop_profile(name):
     max_crop, min_crop, forecast_crop_values = TwelveMonthsForecast(name)
     prev_crop_values = TwelveMonthPrevious(name)
+    print(max_crop)
+    print(min_crop)
+    print(forecast_crop_values)
+    print(prev_crop_values)
+    print()
     context = {
         "max_crop": max_crop,
         "min_crop": min_crop,
         "forecast_values": forecast_crop_values,
         "previous_values": prev_crop_values
     }
-    return render_template('index.html',context)
+    return render_template('commodity.html',context = context)
 
 def TopFiveWinners():
     current_month = datetime.now().month
@@ -142,6 +147,7 @@ def TopFiveWinners():
         name = commodity_list[i].getCropName().split('/')[1]
         to_send.append([name, round((current_month_prediction[i][0]*base[name])/100,2), round(perc[0],2)])
     print(to_send)
+    return to_send
 
 def TopFiveLosers():
     current_month = datetime.now().month
@@ -167,6 +173,7 @@ def TopFiveLosers():
         name = commodity_list[i].getCropName().split('/')[1]
         to_send.append([name, round((current_month_prediction[i][0]*base[name])/100,2), round(perc[0],2)])
     print(to_send)
+    return to_send
 """
 def SixMonthsPrediction():
     current_month = datetime.now().month
@@ -203,7 +210,7 @@ def TwelveMonthsForecast(name):
     current_year = datetime.now().year
     current_rainfall = annual_rainfall[current_month - 1]
     name = name.lower()
-    commodity=""
+    commodity=commodity_list[0]
     for i in commodity_list:
         if name == str(i):
             commodity = i
@@ -240,9 +247,9 @@ def TwelveMonthsForecast(name):
     crop_price = []
     for i in range(0,len(wpis)):
         m,y,r = month_with_year[i]
-        crop_price.append([m,y,wpis[i]*base[name.capitalize()]/100,change[i]])
-    max_crop = [max_month, max_year, max_value ]
-    min_crop = [min_month, min_year, min_value]
+        crop_price.append([m,y,round((wpis[i]*base[name.capitalize()]/100)[0],2),round(change[i],2)])
+    max_crop = [max_month, max_year, round(max_value,2) ]
+    min_crop = [min_month, min_year, round(min_value,2) ]
 
     return max_crop, min_crop, crop_price
 
@@ -256,7 +263,7 @@ def TwelveMonthPrevious(name):
     current_month = datetime.now().month
     current_year = datetime.now().year
     current_rainfall = annual_rainfall[current_month-1]
-    commodity = ""
+    commodity = commodity_list[0]
     wpis = []
     crop_price = []
     for i in commodity_list:
@@ -271,12 +278,12 @@ def TwelveMonthPrevious(name):
             month_with_year.append((current_month-i+12, current_year-1,annual_rainfall[current_month-i+11]))
 
     for m, y, r in month_with_year:
-        current_predict = i.getPredictedValue([float(m), y,r])
+        current_predict = commodity.getPredictedValue([float(m), y,r])
         wpis.append(current_predict)
 
     for i in range(0,len(wpis)):
         m,y,r = month_with_year[i]
-        crop_price.append([m,y,wpis[i]*base[name.capitalize()]/100])
+        crop_price.append([m,y,round((wpis[i]*base[name.capitalize()]/100)[0],2)])
 
     return crop_price
 
