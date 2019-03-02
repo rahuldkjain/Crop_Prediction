@@ -209,6 +209,26 @@ def TwelveMonthsForecast(name):
 
 
 
+def TwelveMonthPrevious(name):
+    name = name.lower()
+    current_month = datetime.now().month
+    current_year = datetime.now().year
+    current_rrainfall = annual_rainfall[current_month-1]
+    commodity = ""
+    for i in commodity_list:
+        if name = str(i):
+            commodity = i
+            break
+    month_with_year = []
+    for i in range(1,13):
+        if current_month + i <=12:
+            month_with_year.append(current_month+i, current_year))
+        else:
+            month_with_year.append(current_month+i-12, current_year)
+
+    for m, y in month_with_year:
+        
+
 if __name__ == "__main__":
     arhar = Commodity(commodity_dict["arhar"])
     commodity_list.append(arhar)
