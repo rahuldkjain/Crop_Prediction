@@ -1,43 +1,44 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Mar  2 21:46:27 2019
+
 @author: PRATYUSH
 """
 
-from flask import Flask, render_template
+
+from flask import Flask,render_template
 import numpy as np
 import pandas as pd
 from datetime import datetime
-
-# import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 app = Flask(__name__)
 
 commodity_dict = {
-    "arhar": "static/Arhar.csv",
-    "bajra": "static/Bajra.csv",
-    "barley": "static/Barley.csv",
-    "copra": "static/Copra.csv",
-    "cotton": "static/Cotton.csv",
-    "sesamum": "static/Sesamum.csv",
-    "gram": "static/Gram.csv",
-    "groundnut": "static/Groundnut.csv",
-    "jowar": "static/Jowar.csv",
-    "maize": "static/Maize.csv",
-    "masoor": "static/Masoor.csv",
-    "moong": "static/Moong.csv",
-    "niger": "static/Niger.csv",
-    "paddy": "static/Paddy.csv",
-    "ragi": "static/Ragi.csv",
-    "rape": "static/Rape.csv",
-    "jute": "static/Jute.csv",
-    "safflower": "static/Safflower.csv",
-    "soyabean": "static/Soyabean.csv",
-    "sugarcane": "static/Sugarcane.csv",
-    "sunflower": "static/Sunflower.csv",
-    "urad": "static/Urad.csv",
-    "wheat": "static/Wheat.csv"
-}
+            "arhar":"static/Arhar.csv",
+            "bajra":"static/Bajra.csv",
+            "barley":"static/Barley.csv",
+            "copra":"static/Copra.csv",
+            "cotton":"static/Cotton.csv",
+            "sesamum":"static/Sesamum.csv",
+            "gram":"static/Gram.csv",
+            "groundnut":"static/Groundnut.csv",
+            "jowar":"static/Jowar.csv",
+            "maize":"static/Maize.csv",
+            "masoor":"static/Masoor.csv",
+            "moong":"static/Moong.csv",
+            "niger":"static/Niger.csv",
+            "paddy":"static/Paddy.csv",
+            "ragi":"static/Ragi.csv",
+            "rape":"static/Rape.csv",
+            "jute":"static/Jute.csv",
+            "safflower":"static/Safflower.csv",
+            "soyabean":"static/Soyabean.csv",
+            "sugarcane":"static/Sugarcane.csv",
+            "sunflower":"static/Sunflower.csv",
+            "urad":"static/Urad.csv",
+            "wheat":"static/Wheat.csv"
+             }
 
 annual_rainfall = [19, 22.9, 27.5, 37.7, 62.6, 167, 289, 256.7, 172.2, 76.5, 29.8, 14.9]
 base = {
@@ -66,45 +67,43 @@ base = {
     "Wheat": 1350
 
 }
-commodity_list = []
-
+commodity_list=[]
 
 class Commodity:
+        
+        def __init__(self,csv_name):
+            self.name = csv_name
+            dataset = pd.read_csv(csv_name)
+            X=dataset.iloc[:,:-1].values
+            Y=dataset.iloc[:,3].values
+           
+            from sklearn.model_selection import train_test_split
+            X_train,X_test,Y_train,Y_test = train_test_split(X,Y, test_size=0.1, random_state=0)
+            
+            
+            #Fitting decision tree regression to dataset
+            from sklearn.tree import DecisionTreeRegressor
+            self.regressor = DecisionTreeRegressor(max_depth=10,random_state = 0)
+            self.regressor.fit(X,Y)
+            y_pred_tree = self.regressor.predict(X_test)
+            #fsa=np.array([float(1),2019,45]).reshape(1,3)
+            #fask=regressor_tree.predict(fsa)
+            
+        def getPredictedValue(self,value):
+            fsa=np.array(value).reshape(1,3)
+            return self.regressor.predict(fsa)
 
-    def __init__(self, csv_name):
-        self.name = csv_name
-        dataset = pd.read_csv(csv_name)
-        X = dataset.iloc[:, :-1].values
-        Y = dataset.iloc[:, 3].values
-
-        from sklearn.model_selection import train_test_split
-        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.1, random_state=0)
-
-        # Fitting decision tree regression to dataset
-        from sklearn.tree import DecisionTreeRegressor
-        self.regressor = DecisionTreeRegressor(max_depth=10, random_state=0)
-        self.regressor.fit(X, Y)
-        y_pred_tree = self.regressor.predict(X_test)
-        # fsa=np.array([float(1),2019,45]).reshape(1,3)
-        # fask=regressor_tree.predict(fsa)
-
-    def getPredictedValue(self, value):
-        fsa = np.array(value).reshape(1, 3)
-        return self.regressor.predict(fsa)
-
-    def getCropName(self):
-        a = self.name.split('.')
-        return a[0]
-
-
+        def getCropName(self):
+            a = self.name.split('.')
+            return a[0]
+        
 @app.route('/')
 def index():
     context = {
         "top5": TopFiveWinners(),
         "bottom5": TopFiveLosers()
     }
-    return render_template('index.html', context=context)
-
+    return render_template('index.html',context = context)
 
 @app.route('/commodity/<name>')
 def crop_profile(name):
@@ -121,64 +120,60 @@ def crop_profile(name):
         "forecast_values": forecast_crop_values,
         "previous_values": prev_crop_values
     }
-    return render_template('commodity.html', context=context)
-
+    return render_template('commodity.html',context = context)
 
 def TopFiveWinners():
     current_month = datetime.now().month
     current_year = datetime.now().year
-    current_rainfall = annual_rainfall[current_month - 1]
-    prev_month = current_month - 1
-    prev_rainfall = annual_rainfall[prev_month - 1]
+    current_rainfall = annual_rainfall[current_month-1]
+    prev_month = current_month-1
+    prev_rainfall = annual_rainfall[prev_month-1]
     current_month_prediction = []
     prev_month_prediction = []
     change = []
 
     for i in commodity_list:
-        current_predict = i.getPredictedValue([float(current_month), current_year, current_rainfall])
+        current_predict = i.getPredictedValue([float(current_month),current_year,current_rainfall])
         current_month_prediction.append(current_predict)
-        prev_predict = i.getPredictedValue([float(prev_month), current_year, prev_rainfall])
+        prev_predict = i.getPredictedValue([float(prev_month),current_year,prev_rainfall])
         prev_month_prediction.append(prev_predict)
-        change.append((((current_predict - prev_predict) * 100 / prev_predict), commodity_list.index(i)))
+        change.append((((current_predict-prev_predict)*100/prev_predict),commodity_list.index(i)))
     sorted_change = change
     sorted_change.sort(reverse=True)
-    # print(sorted_change)
-    to_send = []
+    #print(sorted_change)
+    to_send= []
     for j in range(0, 5):
         perc, i = sorted_change[j]
         name = commodity_list[i].getCropName().split('/')[1]
-        to_send.append([name, round((current_month_prediction[i][0] * base[name]) / 100, 2), round(perc[0], 2)])
+        to_send.append([name, round((current_month_prediction[i][0]*base[name])/100,2), round(perc[0],2)])
     print(to_send)
     return to_send
-
 
 def TopFiveLosers():
     current_month = datetime.now().month
     current_year = datetime.now().year
-    current_rainfall = annual_rainfall[current_month - 1]
-    prev_month = current_month - 1
-    prev_rainfall = annual_rainfall[prev_month - 1]
+    current_rainfall = annual_rainfall[current_month-1]
+    prev_month = current_month-1
+    prev_rainfall = annual_rainfall[prev_month-1]
     current_month_prediction = []
     prev_month_prediction = []
     change = []
 
     for i in commodity_list:
-        current_predict = i.getPredictedValue([float(current_month), current_year, current_rainfall])
+        current_predict = i.getPredictedValue([float(current_month),current_year,current_rainfall])
         current_month_prediction.append(current_predict)
-        prev_predict = i.getPredictedValue([float(prev_month), current_year, prev_rainfall])
+        prev_predict = i.getPredictedValue([float(prev_month),current_year,prev_rainfall])
         prev_month_prediction.append(prev_predict)
         change.append((((current_predict - prev_predict) * 100 / prev_predict), commodity_list.index(i)))
     sorted_change = change
     sorted_change.sort()
-    to_send = []
+    to_send= []
     for j in range(0, 5):
         perc, i = sorted_change[j]
         name = commodity_list[i].getCropName().split('/')[1]
-        to_send.append([name, round((current_month_prediction[i][0] * base[name]) / 100, 2), round(perc[0], 2)])
+        to_send.append([name, round((current_month_prediction[i][0]*base[name])/100,2), round(perc[0],2)])
     print(to_send)
     return to_send
-
-
 """
 def SixMonthsPrediction():
     current_month = datetime.now().month
@@ -192,6 +187,7 @@ def SixMonthsPrediction():
     six_month_prediction = []
     prev_month_prediction = []
     change = []
+
     for i in commodity_list:
         current_predict = i.getPredictedValue([float(current_month), current_year, current_rainfall])
         current_month_prediction.append(current_predict)
@@ -209,61 +205,64 @@ def SixMonthsPrediction():
     print(to_send)
 """
 
-
 def TwelveMonthsForecast(name):
     current_month = datetime.now().month
     current_year = datetime.now().year
     current_rainfall = annual_rainfall[current_month - 1]
     name = name.lower()
-    commodity = commodity_list[0]
+    commodity=commodity_list[0]
     for i in commodity_list:
         if name == str(i):
             commodity = i
             break
     month_with_year = []
-    for i in range(1, 13):
-        if current_month + i <= 12:
-            month_with_year.append((current_month + i, current_year, annual_rainfall[current_month + i - 1]))
+    for i in range(1,13):
+        if current_month+i <=12:
+            month_with_year.append((current_month+i,current_year, annual_rainfall[current_month+i-1]))
         else:
-            month_with_year.append((current_month + i - 12, current_year + 1, annual_rainfall[current_month + i - 13]))
+            month_with_year.append((current_month+i-12,current_year+1,annual_rainfall[current_month+i-13]))
     max_index = 0
     min_index = 0
     max_value = 0
     min_value = 9999
     wpis = []
-    current_wpi = commodity.getPredictedValue([float(current_month), current_year, current_rainfall])
+    current_wpi = commodity.getPredictedValue([float(current_month),current_year, current_rainfall])
     change = []
 
     for m, y, r in month_with_year:
         current_predict = commodity.getPredictedValue([float(m), y, r])
         if current_predict > max_value:
             max_value = current_predict
-            max_index = month_with_year.index((m, y, r))
+            max_index = month_with_year.index((m,y,r))
         if current_predict < min_value:
             min_value = current_predict
-            min_index = month_with_year.index((m, y, r))
+            min_index = month_with_year.index((m,y,r))
         wpis.append(current_predict)
         change.append(((current_predict - current_wpi) * 100) / current_wpi)
 
     max_month, max_year, r1 = month_with_year[max_index]
     min_month, min_year, r2 = month_with_year[min_index]
-    min_value = min_value * base[name.capitalize()] / 100
-    max_value = max_value * base[name.capitalize()] / 100
+    min_value = min_value*base[name.capitalize()]/100
+    max_value = max_value*base[name.capitalize()]/100
     crop_price = []
-    for i in range(0, len(wpis)):
-        m, y, r = month_with_year[i]
-        crop_price.append([m, y, round((wpis[i] * base[name.capitalize()] / 100)[0], 2), round(change[i], 2)])
-    max_crop = [max_month, max_year, round(max_value, 2)]
-    min_crop = [min_month, min_year, round(min_value, 2)]
+    for i in range(0,len(wpis)):
+        m,y,r = month_with_year[i]
+        crop_price.append([m,y,round((wpis[i]*base[name.capitalize()]/100)[0],2),round(change[i],2)])
+    max_crop = [max_month, max_year, round(max_value,2) ]
+    min_crop = [min_month, min_year, round(min_value,2) ]
 
     return max_crop, min_crop, crop_price
+
+
+
+
 
 
 def TwelveMonthPrevious(name):
     name = name.lower()
     current_month = datetime.now().month
     current_year = datetime.now().year
-    current_rainfall = annual_rainfall[current_month - 1]
+    current_rainfall = annual_rainfall[current_month-1]
     commodity = commodity_list[0]
     wpis = []
     crop_price = []
@@ -272,21 +271,23 @@ def TwelveMonthPrevious(name):
             commodity = i
             break
     month_with_year = []
-    for i in range(1, 13):
-        if current_month - i >= 1:
-            month_with_year.append((current_month - i, current_year, annual_rainfall[current_month - i - 1]))
+    for i in range(1,13):
+        if current_month - i >=1:
+            month_with_year.append((current_month-i, current_year,annual_rainfall[current_month-i-1]))
         else:
-            month_with_year.append((current_month - i + 12, current_year - 1, annual_rainfall[current_month - i + 11]))
+            month_with_year.append((current_month-i+12, current_year-1,annual_rainfall[current_month-i+11]))
 
     for m, y, r in month_with_year:
-        current_predict = commodity.getPredictedValue([float(m), y, r])
+        current_predict = commodity.getPredictedValue([float(m), y,r])
         wpis.append(current_predict)
 
-    for i in range(0, len(wpis)):
-        m, y, r = month_with_year[i]
-        crop_price.append([m, y, round((wpis[i] * base[name.capitalize()] / 100)[0], 2)])
+    for i in range(0,len(wpis)):
+        m,y,r = month_with_year[i]
+        crop_price.append([m,y,round((wpis[i]*base[name.capitalize()]/100)[0],2)])
 
     return crop_price
+
+
 
 
 if __name__ == "__main__":
@@ -338,8 +339,14 @@ if __name__ == "__main__":
     commodity_list.append(wheat)
     print(TopFiveWinners())
     print(TopFiveLosers())
-    print(arhar.getPredictedValue([4, 2019, 100]))
-    print(bajra.getPredictedValue([4, 2019, 100]))
-    print(barley.getPredictedValue([4, 2019, 100]))
-    print(copra.getPredictedValue([4, 2019, 100]))
+    print(arhar.getPredictedValue([4,2019,100]))
+    print(bajra.getPredictedValue([4,2019,100]))
+    print(barley.getPredictedValue([4,2019,100]))
+    print(copra.getPredictedValue([4,2019,100]))
     app.run()
+    
+    
+    
+    
+    
+    
