@@ -5,10 +5,11 @@ Created on Sat Mar  2 21:46:27 2019
 @author: PRATYUSH
 """
 
-from flask import Flask
+from flask import Flask, render_template
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import sklearn
 
 app = Flask(__name__)
 
@@ -64,9 +65,8 @@ class Commodity:
             return self.regressor.predict(fsa)
         
 @app.route('/')
-
-def index():
-    return "Hello World"
+def home():
+    return render_template('index.html')
 
 if __name__ == "__main__":
     arhar = Commodity(commodity_dict["arhar"])
@@ -97,7 +97,7 @@ if __name__ == "__main__":
     print(bajra.getPredictedValue([4,2019,100]))
     print(barley.getPredictedValue([4,2019,100]))
     print(copra.getPredictedValue([4,2019,100]))
-    app.run()
+    app.run(debug = True)
     
     
     
