@@ -105,6 +105,18 @@ def index():
     }
     return render_template('index.html',context)
 
+@app.route('/commodity/<name>')
+def crop_profile(name):
+    max_crop, min_crop, forecast_crop_values = TwelveMonthsForecast(name)
+    prev_crop_values = TwelveMonthPrevious(name)
+    context = {
+        "max_crop": max_crop,
+        "min_crop": min_crop,
+        "forecast_values": forecast_crop_values,
+        "previous_values": prev_crop_values
+    }
+    return render_template('index.html',context)
+
 def TopFiveWinners():
     current_month = datetime.now().month
     current_year = datetime.now().year
@@ -199,11 +211,41 @@ def TwelveMonthsForecast(name):
     month_with_year = []
     for i in range(1,13):
         if current_month+i <=12:
-            month_with_year.append((current_month+i,current_year))
+            month_with_year.append((current_month+i,current_year, annual_rainfall[current_month+i-1]))
         else:
-            month_with_year.append((current_month+i-12,current_year+1))
+            month_with_year.append((current_month+i-12,current_year+1,annual_rainfall[current_month+i-13]))
+    max_index = 0
+    min_index = 0
+    max_value = 0
+    min_value = 9999
+    wpis = []
+    current_wpi = commodity.getPredictedValue([float(current_month),current_year, current_rainfall])
+    change = []
 
-    for m, y in month_with_year:
+    for m, y, r in month_with_year:
+        current_predict = commodity.getPredictedValue([float(m), y, r])
+        if current_predict > max_value:
+            max_value = current_predict
+            max_index = month_with_year.index((m,y,r))
+        if current_predict < min_value:
+            min_value = current_predict
+            min_index = month_with_year.index((m,y,r))
+        wpis.append(current_predict)
+        change.append(((current_predict - current_wpi) * 100) / current_wpi)
+
+    max_month, max_year, r1 = month_with_year[max_index]
+    min_month, min_year, r2 = month_with_year[min_index]
+    min_value = min_value*base[name.capitalize()]/100
+    max_value = max_value*base[name.capitalize()]/100
+    crop_price = []
+    for i in range(0,len(wpis)):
+        m,y,r = month_with_year[i]
+        crop_price.append([m,y,wpis[i]*base[name.capitalize()]/100,change[i]])
+    max_crop = [max_month, max_year, max_value ]
+    min_crop = [min_month, min_year, min_value]
+
+    return max_crop, min_crop, crop_price
+
 
 
 
