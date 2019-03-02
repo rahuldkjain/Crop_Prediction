@@ -116,12 +116,13 @@ def TopFiveWinners():
         current_month_prediction.append(current_predict)
         prev_predict = i.getPredictedValue([float(prev_month),current_year,prev_rainfall])
         prev_month_prediction.append(prev_predict)
-        change.append((commodity_list.index(i), (current_predict-prev_predict)*100/prev_predict))
+        change.append((((current_predict-prev_predict)*100/prev_predict),commodity_list.index(i)))
     sorted_change = change
     sorted_change.sort(reverse=True)
+    #print(sorted_change)
     to_send= []
     for j in range(0, 5):
-        i, perc = sorted_change[j]
+        perc, i = sorted_change[j]
         name = commodity_list[i].getCropName().split('/')[1]
         to_send.append([name, round((current_month_prediction[i][0]*base[name])/100,2), round(perc[0],2)])
     print(to_send)
@@ -141,12 +142,12 @@ def TopFiveLosers():
         current_month_prediction.append(current_predict)
         prev_predict = i.getPredictedValue([float(prev_month),current_year,prev_rainfall])
         prev_month_prediction.append(prev_predict)
-        change.append((commodity_list.index(i), (current_predict-prev_predict)*100/prev_predict))
+        change.append((((current_predict - prev_predict) * 100 / prev_predict), commodity_list.index(i)))
     sorted_change = change
     sorted_change.sort()
     to_send= []
     for j in range(0, 5):
-        i, perc = sorted_change[j]
+        perc, i = sorted_change[j]
         name = commodity_list[i].getCropName().split('/')[1]
         to_send.append([name, round((current_month_prediction[i][0]*base[name])/100,2), round(perc[0],2)])
     print(to_send)
