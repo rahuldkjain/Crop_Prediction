@@ -154,7 +154,8 @@ def crop_profile(name):
         "current_price": 30,
         "image_url":crop_data[0],
         "favourable":crop_data[1],
-        "type_c":crop_data[2]
+        "type_c":crop_data[2],
+        "export":crop_data[3]
     }
     return render_template('commodity.html', context=context)
 
