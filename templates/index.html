@@ -26,27 +26,13 @@
         </thead>
 
         <tbody>
+        {% for item in context['top5'] %}
           <tr>
-            <td>Eclair</td>
-            <td>₹40</td>
-            <td class="valign-wrapper">5% <img src="../static/gain-icon.png" height="25" width="25"></td>
+            <td>{{item[0]}}</td>
+            <td>{{item[1]}}</td>
+            <td class="valign-wrapper">{{item[2]}}% <img src="../static/gain-icon.png" height="25" width="25"></td>
           </tr>
-          <tr>
-            <td>Eclair</td>
-            <td>₹40</td>
-            <td class="valign-wrapper">5% <img src="../static/gain-icon.png" height="25" width="25"></td>
-          </tr>
-          <tr>
-            <td>Eclair</td>
-            <td>₹40</td>
-            <td class="valign-wrapper">5% <img src="../static/gain-icon.png" height="25" width="25"></td>
-          </tr>
-          <tr>
-            <td>Eclair</td>
-            <td>₹40</td>
-            <td class="valign-wrapper">5% <img src="../static/gain-icon.png" height="25" width="25"></td>
-          </tr>
-
+        {% endfor %}
         </tbody>
       </table>
       <h5>Top Loosers</h5>
@@ -60,26 +46,13 @@
         </thead>
 
         <tbody>
-                    <tr>
-            <td>Eclair</td>
-            <td>₹40</td>
-            <td class="valign-wrapper">5% <img src="../static/loss-icon.png" height="25" width="25"></td>
+        {% for item in context['bottom5'] %}
+          <tr>
+            <td>{{item[0]}}</td>
+            <td>{{item[1]}}</td>
+            <td class="valign-wrapper">{{item[2]}}% <img src="../static/loss-icon.png" height="25" width="25"></td>
           </tr>
-                    <tr>
-            <td>Eclair</td>
-            <td>₹40</td>
-            <td class="valign-wrapper">5% <img src="../static/loss-icon.png" height="25" width="25"></td>
-          </tr>
-                    <tr>
-            <td>Eclair</td>
-            <td>₹40</td>
-            <td class="valign-wrapper">5% <img src="../static/loss-icon.png" height="25" width="25"></td>
-          </tr>
-                    <tr>
-            <td>Eclair</td>
-            <td>₹40</td>
-            <td class="valign-wrapper">5% <img src="../static/loss-icon.png" height="25" width="25"></td>
-          </tr>
+        {% endfor %}
         </tbody>
       </table>
     </div>

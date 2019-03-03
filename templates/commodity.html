@@ -12,35 +12,35 @@
 </head>
 <body>
   <div>
-    <h2 class="header">Sugarcane</h2>
+    <h2 class="header">{{context.name}}</h2>
     <div class="row">
         <div class="col s8 m7">
       <div class="card horizontal medium">
         <div class="card-image">
-          <img src="https://cdn.pixabay.com/photo/2014/04/03/11/35/sugarcane-311914_960_720.png">
+          <img src={{context.image_url}}>
         </div>
         <div class="card-stacked">
           <div class="card-content">
             <table>
               <tr>
                 <td>Current Price</td>
+                <td>{{context.current_price}}</td>
               </tr>
               <tr>
                 <td>Prime Location</td>
+                <td>{{context.favourable}}</td>
               </tr>
               <tr>
                 <td>Favourable Season</td>
               </tr>
               <tr>
                 <td>Crop Type</td>
+                  <td>{{context.type_c}}</td>
               </tr>
               <tr>
                 <td>Export</td>
               </tr>
             </table>
-          </div>
-          <div class="card-action">
-            <a href="#">This is a link</a>
           </div>
         </div>
       </div>
@@ -53,16 +53,16 @@
           <table>
             <tr>
               <td><p>Min. crop price time</p>
-              <td><h5>March '19</h5></td>
+              <td><h5>{{context.min_crop[0]}}</h5></td>
               <td>
-                <h4>₹40</h4>                
+                <h4>₹{{context.min_crop[1][0]}}</h4>
               </td>
             </tr>
             <tr>
               <td><p>Max. crop price time</p>
-              <td><h5>March '19</h5></td>
+              <td><h5>{{context.max_crop[0]}}</h5></td>
               <td>
-                <h4>₹40</h4>                
+                <h4>₹{{context.max_crop[1][0]}}</h4>
               </td>
             </tr>
           </table>
@@ -79,34 +79,20 @@
      <table class="striped">
         <thead>
           <tr>
-              <th>Item Name</th>
+              <th>Month</th>
               <th>Price (per Qtl.)</th>
               <th>Change</th>
           </tr>
         </thead>
 
         <tbody>
+        {% for item in context.forecast_values %}
           <tr>
-            <td>Eclair</td>
-            <td>₹40</td>
-            <td class="valign-wrapper">5% <img src="../static/gain-icon.png" height="25" width="25"></td>
+            <td>{{item[0]}}</td>
+            <td>₹{{item[1]}}</td>
+            <td class="valign-wrapper">{{item[2]}}% {% if item[2]>=0 %}<img src= "../static/gain-icon.png" height="25" width="25">{% else %}<img src= "../static/loss-icon.png" height="25" width="25">{% endif %}</td>
           </tr>
-          <tr>
-            <td>Eclair</td>
-            <td>₹40</td>
-            <td class="valign-wrapper">5% <img src="../static/gain-icon.png" height="25" width="25"></td>
-          </tr>
-          <tr>
-            <td>Eclair</td>
-            <td>₹40</td>
-            <td class="valign-wrapper">5% <img src="../static/gain-icon.png" height="25" width="25"></td>
-          </tr>
-          <tr>
-            <td>Eclair</td>
-            <td>₹40</td>
-            <td class="valign-wrapper">5% <img src="../static/gain-icon.png" height="25" width="25"></td>
-          </tr>
-
+        {% endfor %}
         </tbody>
       </table>
 </div>
@@ -118,7 +104,8 @@
   height:400px !important;">
     </canvas>
   <script>
-    new Chart(document.getElementById("chartjs-0"),{"type":"line","data":{"labels":["January","February","March","April","May","June","July","August","September","October","November","December"],"datasets":[{"label":"Next year Price","data":[65,59,80,81,56,55,40],"fill":false,"borderColor":"rgb(75, 192, 192)","lineTension":0.1}]},"options":{ responsive: true,
+    new Chart(
+    document.getElementById("chartjs-0"),{"type":"line","data":{"labels":{{context.forecast_x|safe}},"datasets":[{"label":"Next year Price","data":{{context.forecast_y}},"fill":false,"borderColor":"rgb(75, 192, 192)","lineTension":0.1}]},"options":{ responsive: true,
     maintainAspectRatio: false,
     scales: {
         yAxes: [{
@@ -133,7 +120,7 @@
   height:400px !important;">
     </canvas>
   <script>
-    new Chart(document.getElementById("chartjs-1"),{"type":"line","data":{"labels":["January","February","March","April","May","June","July","August","September","October","November","December"],"datasets":[{"label":"Previous year price","data":[65,59,80,81,56,55,40],"fill":false,"borderColor":"rgb(75, 192, 192)","lineTension":0.1}]},"options":{ responsive: true,
+    new Chart(document.getElementById("chartjs-1"),{"type":"line","data":{"labels":{{context.previous_x|safe}},"datasets":[{"label":"Previous year price","data":{{context.previous_y}},"fill":false,"borderColor":"rgb(75, 192, 192)","lineTension":0.1}]},"options":{ responsive: true,
     maintainAspectRatio: false,
     scales: {
         yAxes: [{
@@ -147,7 +134,7 @@
 
 
 </script>
-</body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
 </html>
