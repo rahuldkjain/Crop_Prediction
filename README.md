@@ -6,7 +6,7 @@
   - Crop detailed forecast upto next 12 months
   - Top Gainers and Losers of current time
   - Crop price prediction with 93-95% accuracy
-  - Model trained on autheticated datasets provided by[data.gov.in](https://data.gov.in)
+  - Model trained on authenticated datasets provided by [data.gov.in](https://data.gov.in)
   - Detailed analysis of crop prices using tables and charts
   - Prediction done by using Polynomial Multivariable Regression techniques.
   - Annual Rainfall, WPI(Wholesale Price Index) datasets are used for training the model
