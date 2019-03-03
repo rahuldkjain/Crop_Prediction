@@ -76,23 +76,40 @@ class Commodity:
     def __init__(self, csv_name):
         self.name = csv_name
         dataset = pd.read_csv(csv_name)
-        X = dataset.iloc[:, :-1].values
-        Y = dataset.iloc[:, 3].values
+        self.X = dataset.iloc[:, :-1].values
+        self.Y = dataset.iloc[:, 3].values
 
-        from sklearn.model_selection import train_test_split
-        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.1, random_state=0)
+        #from sklearn.model_selection import train_test_split
+        #X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.1, random_state=0)
 
         # Fitting decision tree regression to dataset
         from sklearn.tree import DecisionTreeRegressor
         self.regressor = DecisionTreeRegressor(max_depth=10, random_state=0)
-        self.regressor.fit(X, Y)
-        y_pred_tree = self.regressor.predict(X_test)
+        self.regressor.fit(self.X, self.Y)
+        #y_pred_tree = self.regressor.predict(X_test)
         # fsa=np.array([float(1),2019,45]).reshape(1,3)
         # fask=regressor_tree.predict(fsa)
 
     def getPredictedValue(self, value):
-        fsa = np.array(value).reshape(1, 3)
-        return self.regressor.predict(fsa)
+        if value[1]>=2019:
+            fsa = np.array(value).reshape(1, 3)
+            #print(" ",self.regressor.predict(fsa)[0])
+            return self.regressor.predict(fsa)[0]
+        else:
+            c=self.X[:,0:2]
+            x=[]
+            for i in c:
+                x.append(i.tolist())
+            fsa = [value[0], value[1]]
+            ind = 0
+            for i in range(0,len(x)):
+                if x[i]==fsa:
+                    ind=i
+                    break
+            #print(index, " ",ind)
+            #print(x[ind])
+            #print(self.Y[i])
+            return self.Y[i]
 
     def getCropName(self):
         a = self.name.split('.')
@@ -117,11 +134,11 @@ def crop_profile(name):
     previous_x = [i[0] for i in prev_crop_values]
     previous_y = [i[1] for i in prev_crop_values]
     current_price = CurrentMonth(name)
-    print(max_crop)
-    print(min_crop)
-    print(forecast_crop_values)
-    print(prev_crop_values)
-    print(str(forecast_x))
+    #print(max_crop)
+    #print(min_crop)
+    #print(forecast_crop_values)
+    #print(prev_crop_values)
+    #print(str(forecast_x))
     crop_data = crops.crop(name)
     context = {
         "name":name,
@@ -165,7 +182,7 @@ def TopFiveWinners():
     for j in range(0, 5):
         perc, i = sorted_change[j]
         name = commodity_list[i].getCropName().split('/')[1]
-        to_send.append([name, round((current_month_prediction[i][0] * base[name]) / 100, 2), round(perc[0], 2)])
+        to_send.append([name, round((current_month_prediction[i] * base[name]) / 100, 2), round(perc, 2)])
     print(to_send)
     return to_send
 
@@ -192,7 +209,7 @@ def TopFiveLosers():
     for j in range(0, 5):
         perc, i = sorted_change[j]
         name = commodity_list[i].getCropName().split('/')[1]
-        to_send.append([name, round((current_month_prediction[i][0] * base[name]) / 100, 2), round(perc[0], 2)])
+        to_send.append([name, round((current_month_prediction[i] * base[name]) / 100, 2), round(perc, 2)])
     print(to_send)
     return to_send
 
@@ -286,13 +303,14 @@ def TwelveMonthsForecast(name):
         m, y, r = month_with_year[i]
         x = datetime(y, m, 1)
         x = x.strftime("%b %y")
-        crop_price.append([x, round((wpis[i] * base[name.capitalize()] / 100)[0], 2), round(change[i][0], 2)])
+        crop_price.append([x, round((wpis[i]* base[name.capitalize()]) / 100, 2) , round(change[i], 2)])
+    print("forecasr", wpis)
     x = datetime(max_year,max_month,1)
     x = x.strftime("%b %y")
-    max_crop = [x, max_value]
+    max_crop = [x, round(max_value,2)]
     x = datetime(min_year, min_month, 1)
     x = x.strftime("%b %y")
-    min_crop = [x, min_value]
+    min_crop = [x, round(min_value,2)]
 
     return max_crop, min_crop, crop_price
 
@@ -317,14 +335,15 @@ def TwelveMonthPrevious(name):
             month_with_year.append((current_month - i + 12, current_year - 1, annual_rainfall[current_month - i + 11]))
 
     for m, y, r in month_with_year:
-        current_predict = commodity.getPredictedValue([float(m), y, r])
+        current_predict = commodity.getPredictedValue([float(m), 2013, r])
         wpis.append(current_predict)
 
     for i in range(0, len(wpis)):
         m, y, r = month_with_year[i]
         x = datetime(y,m,1)
         x = x.strftime("%b %y")
-        crop_price.append([x, round((wpis[i] * base[name.capitalize()] / 100)[0], 2)])
+        crop_price.append([x, round((wpis[i]* base[name.capitalize()]) / 100, 2)])
+    print("previous ", wpis)
     new_crop_price =[]
     for i in range(len(crop_price)-1,-1,-1):
         new_crop_price.append(crop_price[i])
@@ -378,12 +397,7 @@ if __name__ == "__main__":
     commodity_list.append(urad)
     wheat = Commodity(commodity_dict["wheat"])
     commodity_list.append(wheat)
-    print(TopFiveWinners())
-    print(TopFiveLosers())
-    print(arhar.getPredictedValue([4, 2019, 100]))
-    print(bajra.getPredictedValue([4, 2019, 100]))
-    print(barley.getPredictedValue([4, 2019, 100]))
-    print(copra.getPredictedValue([4, 2019, 100]))
+
     app.run()
 
 

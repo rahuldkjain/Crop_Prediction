@@ -55,14 +55,14 @@
               <td><p>Min. crop price time</p>
               <td><h5>{{context.min_crop[0]}}</h5></td>
               <td>
-                <h4>₹{{context.min_crop[1][0]}}</h4>
+                <h4>₹{{context.min_crop[1]}}</h4>
               </td>
             </tr>
             <tr>
               <td><p>Max. crop price time</p>
               <td><h5>{{context.max_crop[0]}}</h5></td>
               <td>
-                <h4>₹{{context.max_crop[1][0]}}</h4>
+                <h4>₹{{context.max_crop[1]}}</h4>
               </td>
             </tr>
           </table>
@@ -101,7 +101,7 @@
 
     <div class="chartjs-wrapper col s7 offset-s1">
     <canvas id="chartjs-0" class="chartjs" width="undefined" height="undefined" style=" width:800px !important;
-  height:400px !important;">
+  height:600px !important;">
     </canvas>
   <script>
     new Chart(
@@ -109,8 +109,10 @@
     maintainAspectRatio: false,
     scales: {
         yAxes: [{
+            display: true,
             ticks: {
-                beginAtZero:true
+                suggestedMin: 1000,
+                stepSize : 100
             }
         }]
     }}});</script>
@@ -124,8 +126,10 @@
     maintainAspectRatio: false,
     scales: {
         yAxes: [{
+            display : true,
             ticks: {
-                beginAtZero:true
+                suggestedMin : 1000,
+                stepSize : 100
             }
         }]
     }}});</script>
