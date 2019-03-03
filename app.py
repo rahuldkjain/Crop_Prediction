@@ -153,7 +153,7 @@ def crop_profile(name):
         "previous_y":previous_y,
         "current_price": current_price,
         "image_url":crop_data[0],
-        "favourable":crop_data[1],
+        "prime_loc":crop_data[1],
         "type_c":crop_data[2],
         "export":crop_data[3]
     }
