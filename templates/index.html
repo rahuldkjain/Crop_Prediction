@@ -7,15 +7,20 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <!-- Compiled and minified JavaScript -->
-
+    <style>
+        div.main {
+            padding: 5px 50px 75px 50px;
+        }
+    </style>
+    
         
 </head>
-<body>
+<body class="main">
   <div>
-  <h3>Apna Anaaj</h3>
+  <h3 class="card-panel #ffd54f amber lighten-2 center"><img src="../static/images/Logo.png">Apna Anaaj</h3>
     <div class="row">
-    <div class="col s9">
-      <h5>Top Gainers</h5>
+    <div class="card-panel col s9">
+      <h4 class=" #e0f7fa cyan lighten-5">Top Gainers(Current trends)</h4>
       <table class="striped">
         <thead>
           <tr>
@@ -29,13 +34,14 @@
         {% for item in context['top5'] %}
           <tr>
             <td>{{item[0]}}</td>
-            <td>{{item[1]}}</td>
+            <td>₹{{item[1]}}</td>
             <td class="valign-wrapper">{{item[2]}}% <img src="../static/gain-icon.png" height="25" width="25"></td>
           </tr>
         {% endfor %}
         </tbody>
       </table>
-      <h5>Top Loosers</h5>
+        <div class="card-panel">
+      <h4 class="#e0f7fa cyan lighten-5">Top Losers(Current trends)</h4>
       <table class="striped">
         <thead>
           <tr>
@@ -49,36 +55,39 @@
         {% for item in context['bottom5'] %}
           <tr>
             <td>{{item[0]}}</td>
-            <td>{{item[1]}}</td>
+            <td>₹{{item[1]}}</td>
             <td class="valign-wrapper">{{item[2]}}% <img src="../static/loss-icon.png" height="25" width="25"></td>
           </tr>
         {% endfor %}
         </tbody>
       </table>
+            </div>
     </div>
     <div class="col s3">
+        {% for item in context.sixmonths %}
       <div class="card grey lighten-3">
         <div class="card-content black-text">
-           <span class="card-title">December, 19</span>
+           <span class="card-title" id="time">{{item[0]}}</span>
           <table>
             <tr>
-              <td><img src="https://img.icons8.com/color/48/000000/potato.png" alt="" class="circle"></td>
-              <td><h5>Potato</h5></td>
+              <td><h5 id="crop1">{{item[1]}}</h5></td>
               <td>
-                <h4>₹40</h4>
-                <p>2%<img src="https://img.icons8.com/color/48/000000/sort-up.png" height="20" width="20" style="{margin-left: 5;}"></p>
+                  <h4 id="price1">₹{{item[2]}}</h4></td>
+                <td>
+                <p id="pos-change">{{item[3]}}%<img src="https://img.icons8.com/color/48/000000/sort-up.png" height="20" width="20" style="{margin-left: 5;}"></p>
                 
               </td>
             </tr>
             <tr>
-              <td><img src="https://img.icons8.com/color/48/000000/potato.png" alt="" class="circle"></td>
-              <td><h5>Potato</h5></td>
-              <td><h4>₹40</h4></td>
+              <td><h5 id="crop2">{{item[4]}}</h5></td>
+              <td><h4 id="price2">₹{{item[5]}}</h4></td>
+              <p id="neg-change">{{item[6]}}%<img src="https://img.icons8.com/color/48/000000/sort-down.png" height="20" width="20" style="{margin-left: 5;}"></p>
             </tr>
           </table>
 
-        </div>       
+        </div>
       </div>
+        {% endfor %}
     </div>
   </div>
   <h5>Explore by commodity</h5>
