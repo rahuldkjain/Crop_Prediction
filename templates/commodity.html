@@ -24,14 +24,11 @@
             <table>
               <tr>
                 <td>Current Price</td>
-                <td>{{context.current_price}}</td>
+                <td>{{context.current_price}} / ql</td>
               </tr>
               <tr>
                 <td>Prime Location</td>
                 <td>{{context.favourable}}</td>
-              </tr>
-              <tr>
-                <td>Favourable Season</td>
               </tr>
               <tr>
                 <td>Crop Type</td>
@@ -101,7 +98,7 @@
 
     <div class="chartjs-wrapper col s7 offset-s1">
     <canvas id="chartjs-0" class="chartjs" width="undefined" height="undefined" style=" width:800px !important;
-  height:600px !important;">
+  height:400px !important;">
     </canvas>
   <script>
     new Chart(
@@ -112,7 +109,7 @@
             display: true,
             ticks: {
                 suggestedMin: 1000,
-                stepSize : 100
+                stepSize : 200
             }
         }]
     }}});</script>
@@ -129,7 +126,7 @@
             display : true,
             ticks: {
                 suggestedMin : 1000,
-                stepSize : 100
+                stepSize : 200
             }
         }]
     }}});</script>

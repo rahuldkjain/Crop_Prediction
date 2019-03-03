@@ -120,7 +120,8 @@ class Commodity:
 def index():
     context = {
         "top5": TopFiveWinners(),
-        "bottom5": TopFiveLosers()
+        "bottom5": TopFiveLosers(),
+        "sixmonths": SixMonthsForecast()
     }
     return render_template('index.html', context=context)
 
@@ -142,7 +143,6 @@ def crop_profile(name):
     crop_data = crops.crop(name)
     context = {
         "name":name,
-        "price":current_price,
         "max_crop": max_crop,
         "min_crop": min_crop,
         "forecast_values": forecast_crop_values,
@@ -151,7 +151,7 @@ def crop_profile(name):
         "previous_values": prev_crop_values,
         "previous_x":previous_x,
         "previous_y":previous_y,
-        "current_price": 30,
+        "current_price": current_price,
         "image_url":crop_data[0],
         "favourable":crop_data[1],
         "type_c":crop_data[2]
@@ -214,36 +214,85 @@ def TopFiveLosers():
     return to_send
 
 
-"""
-def SixMonthsPrediction():
+
+def SixMonthsForecast():
+    month1=[]
+    month2=[]
+    month3=[]
+    month4=[]
+    month5=[]
+    month6=[]
+    for i in commodity_list:
+        crop=SixMonthsForecastHelper(i.getCropName())
+        k=0
+        for j in crop:
+            time = j[0]
+            price = j[1]
+            change = j[2]
+            if k==0:
+                month1.append((price,change,i.getCropName().split("/")[1],time))
+            elif k==1:
+                month2.append((price,change,i.getCropName().split("/")[1],time))
+            elif k==2:
+                month3.append((price,change,i.getCropName().split("/")[1],time))
+            elif k==3:
+                month4.append((price,change,i.getCropName().split("/")[1],time))
+            elif k==4:
+                month5.append((price,change,i.getCropName().split("/")[1],time))
+            elif k==5:
+                month6.append((price,change,i.getCropName().split("/")[1],time))
+            k+=1
+    month1.sort()
+    month2.sort()
+    month3.sort()
+    month4.sort()
+    month5.sort()
+    month6.sort()
+    crop_month_wise=[]
+    crop_month_wise.append([month1[0][3],month1[len(month1)-1][2],month1[len(month1)-1][0],month1[len(month1)-1][1],month1[0][2],month1[0][0],month1[0][1]])
+    crop_month_wise.append([month2[0][3],month2[len(month2)-1][2],month2[len(month2)-1][0],month2[len(month2)-1][1],month2[0][2],month2[0][0],month2[0][1]])
+    crop_month_wise.append([month3[0][3],month3[len(month3)-1][2],month3[len(month3)-1][0],month3[len(month3)-1][1],month3[0][2],month3[0][0],month3[0][1]])
+    crop_month_wise.append([month4[0][3],month4[len(month4)-1][2],month4[len(month4)-1][0],month4[len(month4)-1][1],month4[0][2],month4[0][0],month4[0][1]])
+    crop_month_wise.append([month5[0][3],month5[len(month5)-1][2],month5[len(month5)-1][0],month5[len(month5)-1][1],month5[0][2],month5[0][0],month5[0][1]])
+    crop_month_wise.append([month6[0][3],month6[len(month6)-1][2],month6[len(month6)-1][0],month6[len(month6)-1][1],month6[0][2],month6[0][0],month6[0][1]])
+
+    print(crop_month_wise)
+    return crop_month_wise
+
+def SixMonthsForecastHelper(name):
     current_month = datetime.now().month
     current_year = datetime.now().year
     current_rainfall = annual_rainfall[current_month - 1]
-    months=[]
-    rainfalls=[]
-    for i in range(0,6):
-        months.append(current_month+i)
-        rainfalls.append(current_month+i)
-    six_month_prediction = []
-    prev_month_prediction = []
+    name = name.split("/")[1]
+    name = name.lower()
+    commodity = commodity_list[0]
+    for i in commodity_list:
+        if name == str(i):
+            commodity = i
+            break
+    month_with_year = []
+    for i in range(1, 7):
+        if current_month + i <= 12:
+            month_with_year.append((current_month + i, current_year, annual_rainfall[current_month + i - 1]))
+        else:
+            month_with_year.append((current_month + i - 12, current_year + 1, annual_rainfall[current_month + i - 13]))
+    wpis = []
+    current_wpi = commodity.getPredictedValue([float(current_month), current_year, current_rainfall])
     change = []
 
-    for i in commodity_list:
-        current_predict = i.getPredictedValue([float(current_month), current_year, current_rainfall])
-        current_month_prediction.append(current_predict)
-        prev_predict = i.getPredictedValue([float(prev_month), current_year, prev_rainfall])
-        prev_month_prediction.append(prev_predict)
-        change.append((((current_predict - prev_predict) * 100 / prev_predict), commodity_list.index(i)))
-    sorted_change = change
-    sorted_change.sort(reverse=True)
-    # print(sorted_change)
-    to_send = []
-    for j in range(0, 5):
-        perc, i = sorted_change[j]
-        name = commodity_list[i].getCropName().split('/')[1]
-        to_send.append([name, round((current_month_prediction[i][0] * base[name]) / 100, 2), round(perc[0], 2)])
-    print(to_send)
-"""
+    for m, y, r in month_with_year:
+        current_predict = commodity.getPredictedValue([float(m), y, r])
+        wpis.append(current_predict)
+        change.append(((current_predict - current_wpi) * 100) / current_wpi)
+
+    crop_price = []
+    for i in range(0, len(wpis)):
+        m, y, r = month_with_year[i]
+        x = datetime(y, m, 1)
+        x = x.strftime("%b %y")
+        crop_price.append([x, round((wpis[i]* base[name.capitalize()]) / 100, 2) , round(change[i], 2)])
+    
+    return crop_price
 
 def CurrentMonth(name):
     current_month = datetime.now().month
