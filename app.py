@@ -121,7 +121,7 @@ def index():
     context = {
         "top5": TopFiveWinners(),
         "bottom5": TopFiveLosers(),
-        "sixmonths": SixMonthsForecast()
+        "sixmonths": SixMonthsForecast()[:3]
     }
     return render_template('index.html', context=context)
 
