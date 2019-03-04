@@ -17,7 +17,7 @@
 </head>
 <body class="main">
   <div>
-  <h3 class="card-panel #ffd54f amber lighten-2 center"><img src="/static/Logo.png" height="85px" width="85px" >  Apna Anaaj</h3>
+  <h3 class="card-panel #ffd54f amber lighten-2 center valign-wrapper center"><img src="../static/images/Logo.png" height="70px" width="70px">Apna Anaaj</h3>
     <div class="row">
     <div class="card-panel col s9">
       <h4 class=" #e0f7fa cyan lighten-5">Top Gainers(Current trends)</h4>
@@ -68,20 +68,21 @@
       <div class="card grey lighten-3">
         <div class="card-content black-text">
            <span class="card-title" id="time">{{item[0]}}</span>
-          <table>
+          <table class="valign-wrapper">
             <tr>
               <td><h5 id="crop1">{{item[1]}}</h5></td>
-              <td>
-                  <h4 id="price1">₹{{item[2]}}</h4></td>
-                <td>
-                <p id="pos-change">{{item[3]}}%<img src="https://img.icons8.com/color/48/000000/sort-up.png" height="20" width="20" style="{margin-left: 5;}"></p>
-                
-              </td>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              <td class="right">
+                  <h4 id="price1">₹{{item[2]}}</h4>
+              <p id="pos-change" class="valign-wrapper right">{{item[3]}}%<img src="../static/loss-icon.png" height="20" width="20" style="{margin-left: 5;}"></p></td>
+
             </tr>
             <tr>
               <td><h5 id="crop2">{{item[4]}}</h5></td>
-              <td><h4 id="price2">₹{{item[5]}}</h4></td>
-              <p id="neg-change">{{item[6]}}%<img src="https://img.icons8.com/color/48/000000/sort-down.png" height="20" width="20" style="{margin-left: 5;}"></p>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              <td class="right"><h4 id="price2">₹{{item[5]}}</h4>
+              <p id="neg-change" class="valign-wrapper right">{{item[6]}}%<img src="../static/loss-icon.png" height="20" width="20" style="{margin-left: 5;}"></p>
+                </td>
             </tr>
           </table>
 
