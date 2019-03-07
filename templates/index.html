@@ -64,31 +64,31 @@
             </div>
     </div>
     <div class="col s3">
-        {% for item in context.sixmonths %}
+
       <div class="card grey lighten-3">
         <div class="card-content black-text">
-           <span class="card-title" id="time">{{item[0]}}</span>
+           <span class="card-title" id="time">{{context.sixmonths[0][0]}}</span>
           <table class="valign-wrapper">
             <tr>
-              <td><h5 id="crop1">{{item[1]}}</h5></td>
+              <td><h5 id="crop1">{{context.sixmonths[0][1]}}</h5></td>
                 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
               <td class="right">
-                  <h4 id="price1">₹{{item[2]}}</h4>
-              <p id="pos-change" class="valign-wrapper right">{{item[3]}}%<img src="../static/loss-icon.png" height="20" width="20" style="{margin-left: 5;}"></p></td>
+                  <h4 id="price1">₹{{context.sixmonths[0][2]}}</h4>
+              <p id="pos-change" class="valign-wrapper right">{{context.sixmonths[0][3]}}%<img src="../static/loss-icon.png" height="20" width="20" style="{margin-left: 5;}"></p></td>
 
             </tr>
             <tr>
-              <td><h5 id="crop2">{{item[4]}}</h5></td>
+              <td><h5 id="crop2">{{context.sixmonths[0][4]}}</h5></td>
                 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-              <td class="right"><h4 id="price2">₹{{item[5]}}</h4>
-              <p id="neg-change" class="valign-wrapper right">{{item[6]}}%<img src="../static/loss-icon.png" height="20" width="20" style="{margin-left: 5;}"></p>
+              <td class="right"><h4 id="price2">₹{{context.sixmonths[0][5]}}</h4>
+              <p id="neg-change" class="valign-wrapper right">{{context.sixmonths[0][6]}}%<img src="../static/loss-icon.png" height="20" width="20" style="{margin-left: 5;}"></p>
                 </td>
             </tr>
           </table>
 
         </div>
       </div>
-        {% endfor %}
+
     </div>
   </div>
   <h5>Explore by commodity</h5>
