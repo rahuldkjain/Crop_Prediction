@@ -2,7 +2,7 @@
 """
 Created on Sat Mar  2 21:46:27 2019
 
-@author: PRATYUSH
+@author: PRATYUSH, Rahul, Somya, Abhay
 """
 
 from flask import Flask, render_template
