@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+
     <!-- Compiled and minified JavaScript -->
     <style>
         div.main {
@@ -22,7 +23,7 @@
 
 
     </style>
-    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         
 </head>
 <body class="main">
@@ -89,7 +90,6 @@
             </div>
     </div>
     <div class="col s3">
-
       <div class="card grey lighten-3">
         <div class="card-content black-text">
            <span class="card-title" id="time">{{context.sixmonths[0][0]}}</span>
@@ -110,6 +110,21 @@
                 </td>
             </tr>
           </table>
+
+            <script>
+                    var i = 0
+                    setInterval(function(){
+                    i = (i+1)%5
+                    $('#time').load('http://localhost:5000/ticker/'+0+ '/' + i);
+                    $('#crop1').load('http://localhost:5000/ticker/'+ 1 + '/' + i);
+                    $('#price1').load('http://localhost:5000/ticker/'+ 2 + '/' + i);
+                    $('#pos-change').load('http://localhost:5000/ticker/'+ 3 + '/'  + i);
+                    $('#crop2').load('http://localhost:5000/ticker/'+ 4 + '/'  + i);
+                    $('#price2').load('http://localhost:5000/ticker/'+ 5 + '/'  + i);
+                    $('#neg-change').load('http://localhost:5000/ticker/'+ 6 + '/'  + i);
+                    }, 4000);
+
+            </script>
 
         </div>
       </div>
@@ -446,10 +461,7 @@
     $('.slider').slider({full_width :true});
   });
 </script>
-
-
-
-
+  </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 

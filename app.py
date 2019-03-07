@@ -159,6 +159,15 @@ def crop_profile(name):
     }
     return render_template('commodity.html', context=context)
 
+@app.route('/ticker/<item>/<number>')
+def ticker(item, number):
+    n = int(number)
+    i = int(item)
+    data = SixMonthsForecast()
+    context = str(data[n][i])
+
+    return context
+
 
 def TopFiveWinners():
     current_month = datetime.now().month
