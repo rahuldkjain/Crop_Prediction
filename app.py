@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 import crops
+import random
 
 # import matplotlib.pyplot as plt
 
@@ -84,7 +85,8 @@ class Commodity:
 
         # Fitting decision tree regression to dataset
         from sklearn.tree import DecisionTreeRegressor
-        self.regressor = DecisionTreeRegressor(max_depth=10, random_state=0)
+        depth = random.randrange(7,18)
+        self.regressor = DecisionTreeRegressor(max_depth=depth)
         self.regressor.fit(self.X, self.Y)
         #y_pred_tree = self.regressor.predict(X_test)
         # fsa=np.array([float(1),2019,45]).reshape(1,3)
