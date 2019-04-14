@@ -16,6 +16,13 @@
 </head>
 <body >
   <div class="main">
+    <div class="nav-wrapper">
+
+		<h3 class="card-panel #ffd54f amber lighten-2 center valign-wrapper center"><a class="brand-logo  #ffd54f-text text-lighten-4" href="#"><img alt="" src="/static/ApnaAnaajLogo.png" height="100px" width="100px" class="responsive-img" />
+          <span>APNA ANAAJ</span></a>
+          </a></h3><h3>
+
+	</div>
     <h2 class="header">{{context.name}}</h2>
     <div class="row">
         <div class="col s8 m7">
@@ -28,19 +35,19 @@
             <table>
               <tr>
                 <td>Current Price</td>
-                <td>{{context.current_price}} / ql</td>
+                <td><b>₹ {{context.current_price}} / ql</b></td>
               </tr>
               <tr>
                 <td>Prime Location</td>
-                <td>{{context.prime_loc}}</td>
+                <td><b>{{context.prime_loc}}</b></td>
               </tr>
               <tr>
                 <td>Crop Type</td>
-                  <td>{{context.type_c}}</td>
+                <td><b>{{context.type_c}}</b></td>
               </tr>
               <tr>
                 <td>Export</td>
-                  <td>{{context.export}}</td>
+                <td><b>{{context.export}}</b></td>
               </tr>
             </table>
           </div>

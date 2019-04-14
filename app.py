@@ -6,6 +6,7 @@ Created on Sat Mar  2 21:46:27 2019
 """
 
 from flask import Flask, render_template
+from flask_cors import CORS, cross_origin
 import numpy as np
 import pandas as pd
 from datetime import datetime
@@ -15,6 +16,9 @@ import random
 # import matplotlib.pyplot as plt
 
 app = Flask(__name__)
+app.config['CORS_HEADERS'] = 'Content-Type'
+
+cors = CORS(app, resources={r"/ticker": {"origins": "http://localhost:port"}})
 
 commodity_dict = {
     "arhar": "static/Arhar.csv",
@@ -162,12 +166,17 @@ def crop_profile(name):
     return render_template('commodity.html', context=context)
 
 @app.route('/ticker/<item>/<number>')
+@cross_origin(origin='localhost',headers=['Content- Type','Authorization'])
 def ticker(item, number):
     n = int(number)
     i = int(item)
     data = SixMonthsForecast()
     context = str(data[n][i])
-
+    print('context: ', context)
+    if i == 2 or i == 5:
+        context = '₹' + context
+    elif i == 3 or i == 6:
+        context = context + '%'
     return context
 
 
@@ -195,7 +204,7 @@ def TopFiveWinners():
         perc, i = sorted_change[j]
         name = commodity_list[i].getCropName().split('/')[1]
         to_send.append([name, round((current_month_prediction[i] * base[name]) / 100, 2), round(perc, 2)])
-    print(to_send)
+    #print(to_send)
     return to_send
 
 
@@ -222,7 +231,7 @@ def TopFiveLosers():
         perc, i = sorted_change[j]
         name = commodity_list[i].getCropName().split('/')[1]
         to_send.append([name, round((current_month_prediction[i] * base[name]) / 100, 2), round(perc, 2)])
-    print(to_send)
+   # print(to_send)
     return to_send
 
 
@@ -268,7 +277,7 @@ def SixMonthsForecast():
     crop_month_wise.append([month5[0][3],month5[len(month5)-1][2],month5[len(month5)-1][0],month5[len(month5)-1][1],month5[0][2],month5[0][0],month5[0][1]])
     crop_month_wise.append([month6[0][3],month6[len(month6)-1][2],month6[len(month6)-1][0],month6[len(month6)-1][1],month6[0][2],month6[0][0],month6[0][1]])
 
-    print(crop_month_wise)
+   # print(crop_month_wise)
     return crop_month_wise
 
 def SixMonthsForecastHelper(name):
@@ -365,7 +374,7 @@ def TwelveMonthsForecast(name):
         x = datetime(y, m, 1)
         x = x.strftime("%b %y")
         crop_price.append([x, round((wpis[i]* base[name.capitalize()]) / 100, 2) , round(change[i], 2)])
-    print("forecasr", wpis)
+   # print("forecasr", wpis)
     x = datetime(max_year,max_month,1)
     x = x.strftime("%b %y")
     max_crop = [x, round(max_value,2)]
@@ -404,7 +413,7 @@ def TwelveMonthPrevious(name):
         x = datetime(y,m,1)
         x = x.strftime("%b %y")
         crop_price.append([x, round((wpis[i]* base[name.capitalize()]) / 100, 2)])
-    print("previous ", wpis)
+   # print("previous ", wpis)
     new_crop_price =[]
     for i in range(len(crop_price)-1,-1,-1):
         new_crop_price.append(crop_price[i])
