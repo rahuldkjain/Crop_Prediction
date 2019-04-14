@@ -172,11 +172,14 @@ def ticker(item, number):
     i = int(item)
     data = SixMonthsForecast()
     context = str(data[n][i])
-    print('context: ', context)
+
     if i == 2 or i == 5:
         context = '₹' + context
     elif i == 3 or i == 6:
+
         context = context + '%'
+
+    #print('context: ', context)
     return context
 
 
@@ -312,7 +315,8 @@ def SixMonthsForecastHelper(name):
         x = datetime(y, m, 1)
         x = x.strftime("%b %y")
         crop_price.append([x, round((wpis[i]* base[name.capitalize()]) / 100, 2) , round(change[i], 2)])
-    
+
+   # print("Crop_Price: ", crop_price)
     return crop_price
 
 def CurrentMonth(name):

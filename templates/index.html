@@ -100,29 +100,87 @@
                 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
               <td class="right">
                   <h4 id="price1">₹{{context.sixmonths[0][2]}}</h4>
-              <p id="pos-change" class="valign-wrapper right">{{context.sixmonths[0][3]}}%<img src="../static/loss-icon.png" height="20" width="20" style="{margin-left: 5;}"></p></td>
+              <p id="pos-change" class="valign-wrapper right">{{context.sixmonths[0][3]}}%</p><img id="change1" src="../static/gain-icon.png" height="20" width="20" style="{margin-left: 5;}"></td>
 
             </tr>
             <tr>
               <td><h5 id="crop2">{{context.sixmonths[0][4]}}</h5></td>
                 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
               <td class="right"><h4 id="price2">₹{{context.sixmonths[0][5]}}</h4>
-              <p id="neg-change" class="valign-wrapper right">{{context.sixmonths[0][6]}}%<img src="../static/loss-icon.png" height="20" width="20" style="{margin-left: 5;}"></p>
+              <p id="neg-change" class="valign-wrapper right">{{context.sixmonths[0][6]}}%</p><img id="change2" src="../static/loss-icon.png" height="20" width="20" style="{margin-left: 5;}">
                 </td>
             </tr>
           </table>
+          <script>
+            function sleep(ms) {
+              return new Promise(resolve => setTimeout(resolve, ms));
+             }
+            function updateTime(i){
+              $('#time').load('http://localhost:5000/ticker/'+0+ '/' + i);
+            }
+
+            function updateCrop1(i){
+              $('#crop1').load('http://localhost:5000/ticker/'+ 1 + '/' + i);
+            }
+
+            function updatePrice1(i){
+              $('#price1').load('http://localhost:5000/ticker/'+ 2 + '/' + i);
+            }
+
+            function updateChange1(i){
+              $("#change1").attr("src","../static/gain-icon.png");
+              $('#pos-change').load('http://localhost:5000/ticker/'+ 3 + '/'  + i);
+
+            }
+
+            function updateCrop2(i){
+              $('#crop2').load('http://localhost:5000/ticker/'+ 4 + '/'  + i);
+            }
+
+            function updatePrice2(i){
+              $('#price2').load('http://localhost:5000/ticker/'+ 5 + '/'  + i);
+            }
+
+            function updateChange2(i){
+              $("#change2").attr("src","../static/loss-icon.png");
+              $('#neg-change').load('http://localhost:5000/ticker/'+ 6 + '/'  + i);
+
+            }
+          </script>
 
             <script>
                     var i = 0
-                    setInterval(function(){
-                    i = (i+1)%5
-                    $('#time').load('http://localhost:5000/ticker/'+0+ '/' + i);
-                    $('#crop1').load('http://localhost:5000/ticker/'+ 1 + '/' + i);
-                    $('#price1').load('http://localhost:5000/ticker/'+ 2 + '/' + i);
-                    $('#pos-change').load('http://localhost:5000/ticker/'+ 3 + '/'  + i);
-                    $('#crop2').load('http://localhost:5000/ticker/'+ 4 + '/'  + i);
-                    $('#price2').load('http://localhost:5000/ticker/'+ 5 + '/'  + i);
-                    $('#neg-change').load('http://localhost:5000/ticker/'+ 6 + '/'  + i);
+                    setInterval(async function(){
+                    i = (i+1)%5;
+                    updateTime(i);
+
+                    updateCrop1(i);
+                    await sleep(200);
+
+                    updatePrice1(i);
+                    await sleep(200);
+
+                    updateChange1(i);
+                    await sleep(200);
+
+                    updateCrop2(i);
+                    await sleep(200);
+
+                    updatePrice2(i);
+                    await sleep(200);
+
+                    updateChange2(i);
+                    await sleep(200);
+
+                    /*
+                    setTimeout(updateCrop1(i), 100);
+                    setTimeout(updatePrice1(i), 300);
+                    setTimeout(updateChange1(i), 500);
+                    setTimeout(updateCrop2(i), 700);
+                    setTimeout(updatePrice2(i), 800);
+                    setTimeout(updateChange2(i), 900);
+                    */
+
                     }, 4000);
 
             </script>
